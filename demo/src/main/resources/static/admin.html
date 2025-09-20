@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #loading {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: none; /* hidden initially */
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+<h1>Admin Details</h1>
+
+<p id="loading">Loading admins...</p>
+
+<table id="adminsTable">
+    <thead>
+    <tr>
+        <th>Email ID</th>
+        <th>Mobile Number</th>
+        <th>Admin Name</th>
+        <th>Password</th>
+    </tr>
+    </thead>
+    <tbody id="tableBody">
+    <!-- Admin rows will be injected here -->
+    </tbody>
+</table>
+
+<script>
+    async function fetchAdmins() {
+        try {
+            const response = await fetch('/admin'); // your REST endpoint
+            const admins = await response.json();
+
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = ''; // clear existing rows
+
+            admins.forEach(admin => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${admin.emailid}</td>
+                    <td>${admin.moblinumber}</td>
+                    <td>${admin.adminname}</td>
+                    <td>${admin.password}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Hide loading and show table
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('adminsTable').style.display = 'table';
+
+        } catch (error) {
+            document.getElementById('loading').innerText = 'Failed to load admins.';
+            console.error(error);
+        }
+    }
+
+    fetchAdmins();
+</script>
+</body>
+</html>

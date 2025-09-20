@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cities List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 60%;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .loading {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<h1>List of Cities</h1>
+<div class="loading" id="loading">Loading cities...</div>
+<table id="citiesTable" style="display:none;">
+    <thead>
+    <tr>
+        <th>City ID</th>
+        <th>City Name</th>
+    </tr>
+    </thead>
+    <tbody id="tableBody">
+    <!-- Data will be inserted here -->
+    </tbody>
+</table>
+
+<script>
+    async function fetchCities() {
+        try {
+            const response = await fetch('/cities');
+            const cities = await response.json();
+
+            const tableBody = document.getElementById('tableBody');
+            cities.forEach(city => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${city.cityid}</td>
+                    <td>${city.cityname}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('citiesTable').style.display = 'table';
+
+        } catch (error) {
+            document.getElementById('loading').innerText = 'Failed to load cities.';
+            console.error(error);
+        }
+    }
+
+    fetchCities();
+</script>
+</body>
+</html>
